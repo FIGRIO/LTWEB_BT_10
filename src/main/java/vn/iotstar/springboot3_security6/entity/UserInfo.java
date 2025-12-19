@@ -4,12 +4,12 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Data // Tự động tạo getter, setter 
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserInfo {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY) [cite: 1569]
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String name;
     private String email;

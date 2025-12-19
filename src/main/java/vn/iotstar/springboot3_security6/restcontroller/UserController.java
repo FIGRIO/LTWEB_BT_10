@@ -14,6 +14,10 @@ public class UserController {
 
     @PostMapping("/new")
     public String addUser(@RequestBody UserInfo userInfo) {
-        return userService.addUser(userInfo);
+        // Gọi service để thêm user (hàm này trả về void)
+        userService.addUser(userInfo);
+        
+        // Trả về thông báo thành công thủ công
+        return "Thêm user thành công!";
     }
 }

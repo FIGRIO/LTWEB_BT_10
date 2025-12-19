@@ -8,6 +8,7 @@ import vn.iotstar.springboot3_security6.repository.UserInfoRepository;
 
 @Service
 public class UserInfoService implements UserDetailsService {
+    
     @Autowired
     private UserInfoRepository repository;
 
@@ -15,6 +16,6 @@ public class UserInfoService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return repository.findByName(username)
                 .map(UserInfoUserDetails::new)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
+                .orElseThrow(() -> new UsernameNotFoundException("Không tìm thấy User: " + username));
     }
 }
