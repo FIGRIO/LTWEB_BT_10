@@ -16,37 +16,42 @@ public class LoginController {
     @Autowired
     private UserService userService;
 
-    // Trang Login
     @GetMapping("/login")
     public String showLoginPage() {
         return "login";
     }
 
-    // Trang Home (sau khi đăng nhập thành công)
     @GetMapping("/hello")
     public String home() {
         return "home";
     }
     
-    // Trang 403 (khi không đủ quyền)
     @GetMapping("/403")
     public String accessDenied() {
         return "403";
     }
 
-    // --- PHẦN ĐĂNG KÝ ---
-
-    // Hiển thị form đăng ký (GET)
     @GetMapping("/signup")
     public String signup(Model model) {
-        model.addAttribute("userInfo", new UserInfo()); // Tạo object rỗng để form binding
+        model.addAttribute("userInfo", new UserInfo());
         return "signup";
     }
 
-    // Xử lý submit form đăng ký (POST)
     @PostMapping("/signup")
     public String processSignup(@ModelAttribute UserInfo userInfo) {
-        userService.addUser(userInfo); // Lưu vào DB
-        return "redirect:/login?success"; // Chuyển hướng về login kèm thông báo thành công
+        userService.addUser(userInfo);
+        return "redirect:/login?success";
+    }
+
+    // Trang Login dành cho JWT (Test AJAX)
+    @GetMapping("/login-jwt")
+    public String showJwtLoginPage() {
+        return "login_jwt";
+    }
+
+    // Trang Profile
+    @GetMapping("/profile")
+    public String showProfilePage() {
+        return "profile";
     }
 }

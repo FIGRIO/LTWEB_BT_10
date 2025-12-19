@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Đăng nhập JWT AJAX</title>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body class="bg-light">
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-5">
+                <div class="card shadow">
+                    <div class="card-header bg-warning text-dark text-center">
+                        <h3>Đăng Nhập (JWT + AJAX)</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label>Username</label>
+                            <input type="text" id="username" class="form-control" value="admin">
+                        </div>
+                        <div class="mb-3">
+                            <label>Password</label>
+                            <input type="password" id="password" class="form-control" value="123">
+                        </div>
+                        <button id="btnLogin" class="btn btn-warning w-100">Lấy Token</button>
+                    </div>
+                </div>
+
+                <div class="mt-4" id="resultArea" style="display:none;">
+                    <div class="alert alert-success">
+                        <h5>Đăng nhập thành công!</h5>
+                        <p><strong>Token:</strong> <span id="tokenDisplay" style="word-break: break-all;"></span></p>
+                    </div>
+                    <button id="btnCallApi" class="btn btn-primary w-100">Gọi API lấy danh sách User (Có kèm
+                        Token)</button>
+                    <div id="apiResponse" class="mt-3 p-3 bg-white border rounded"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            // 1. Xử lý sự kiện click nút Đăng nhập
+            $('#btnLogin').click(function () {
+                var username = $('#username').val();
+                var password = $('#password').val();
+
+                var loginData = {
+                    username: username,
+                    password: password
+                };
+
+                $.ajax({
+                    url: '/user/authenticate', // Gọi API đăng nhập
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify(loginData),
+                    success: function (response) {
+                        // Lưu token vào LocalStorage
+                        localStorage.setItem('jwtToken', response.token);
+
+                        // Hiển thị giao diện kết quả
+                        $('#resultArea').show();
+                        $('#tokenDisplay').text(response.token);
+                        alert("Đăng nhập thành công! Token đã được lưu.");
+                    },
+                    error: function (xhr) {
+                        alert("Đăng nhập thất bại: " + xhr.responseText);
+                    }
+                });
+            });
+
+            // 2. Xử lý sự kiện gọi API bảo mật
+            $('#btnCallApi').click(function () {
+                var token = localStorage.getItem('jwtToken');
+
+                if (!token) {
+                    alert("Chưa có token! Vui lòng đăng nhập trước.");
+                    return;
+                }
+
+                $.ajax({
+                    url: '/customer/all', // API yêu cầu quyền Admin
+                    type: 'GET',
+                    headers: {
+                        'Authorization': 'Bearer ' + token // Gắn Token vào Header
+                    },
+                    success: function (data) {
+                        $('#apiResponse').html('<span class="text-success">' + data + '</span>');
+                    },
+                    error: function (xhr) {
+                        $('#apiResponse').html('<span class="text-danger">Lỗi: ' + xhr.status + ' - ' + xhr.responseJSON.detail + '</span>');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+
+</html>
