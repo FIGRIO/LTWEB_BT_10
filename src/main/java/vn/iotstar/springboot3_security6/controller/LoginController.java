@@ -43,15 +43,19 @@ public class LoginController {
         return "redirect:/login?success";
     }
 
-    // Trang Login dành cho JWT (Test AJAX)
     @GetMapping("/login-jwt")
     public String showJwtLoginPage() {
         return "login_jwt";
     }
 
-    // Trang Profile
     @GetMapping("/profile")
     public String showProfilePage() {
         return "profile";
+    }
+
+    // --- MỚI: Trang Quản lý sản phẩm ---
+    @GetMapping("/products-view")
+    public String showProductPage() {
+        return "products"; // Trả về file products.html
     }
 }

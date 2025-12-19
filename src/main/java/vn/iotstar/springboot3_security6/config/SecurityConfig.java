@@ -37,14 +37,11 @@ public class SecurityConfig {
         return http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        // Cho phép truy cập các trang giao diện và API public
-                        .requestMatchers("/user/new", "/user/authenticate", "/login-jwt", "/signup", "/profile", "/login", "/").permitAll()
+                        // Thêm "/products-view" vào danh sách permitAll
+                        .requestMatchers("/user/new", "/user/authenticate", "/login-jwt", "/signup", "/profile", "/login", "/products-view", "/").permitAll()
                         
-                        // API lấy thông tin user bắt buộc phải có Token
                         .requestMatchers("/user/me").authenticated()
-                        
-                        // Các API customer khác cũng cần xác thực
-                        .requestMatchers("/customer/**").authenticated()
+                        .requestMatchers("/customer/**", "/products/**").authenticated()
                 )
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider())
